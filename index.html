@@ -1,11 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>YouTube Views Count</title>
 </head>
+
 <body>
-   <h1>wow</h1> 
+    <h1>
+        <center> Akhilesh reddy youtube views count website
+        </center>
+    </h1>
+   <h1> url: <input type="text" id="yurl">
+    <button type="submit" onclick="akku()">get views</button>
+</h1>
+    <h1 id="viewsCount"></h1>
+    <h1 id="vid"></h1>
+    <h4 id="urls"></h4>
+
+    <script>
+        // Replace 'YOUR_API_KEY' with your actual API key
+        const API_KEY = 'AIzaSyBeVVdpOo4bOMpIjWSU4xfg8ta_kQ9F3gU';
+        // Example usage
+        var videoUrl = "https://youtu.be/P_NTA0wrXJ0?si=aXBI7kl8H1luoDu5";
+        var videoId = getYouTubeVideoId(videoUrl);
+        var VIDEO_ID =  '9xVp8m0fJSg'; // Replace with the ID of the YouTube video
+        var a = 0;
+        function akku() {
+            var yvu = document.getElementById("yurl").value;
+            document.getElementById("urls").innerText ="video title= "+yvu;
+            VIDEO_ID = getYouTubeVideoId(yvu);
+
+        }
+        // Function to fetch YouTube video statistics
+        function fetchYouTubeViewsCount() {
+            a++
+
+            fetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${VIDEO_ID}&key=${API_KEY}`)
+                .then(response => response.json())
+                .then(data => {
+                    const viewsCount = data.items[ 0 ].statistics.viewCount;
+                    document.getElementById('viewsCount').innerText = `Video Views: ${viewsCount} Refresh=${a}`;
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Call the function to fetch views count when the page loads
+        function getYouTubeVideoId(url) {
+            // Regular expression to match YouTube video ID
+            var regExp = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+
+            // Extract video ID from the URL
+            var match = url.match(regExp);
+
+            // If a match is found, return the video ID
+            if (match && match[ 1 ]) {
+                return match[ 1 ];
+            } else {
+                // Return null if no match is found
+                return null;
+            }
+        }
+
+
+
+        // console.log(videoId); // Output: dQw4w9WgXcQ
+        // document.getElementById("vid").innerText = videoId;
+
+        window.onload = fetchYouTubeViewsCount;
+        setInterval(fetchYouTubeViewsCount, 1000);
+    </script>
+
 </body>
+
 </html>
